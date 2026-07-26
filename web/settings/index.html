@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>弹幕提醒设置</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand pywebview-drag-region">
+      <span class="brand-mark"></span>
+      <span class="brand-text">最小化到托盘</span>
+      <button class="btn btn-close-settings pywebview-drag-region-ignore" id="btn-close-settings" title="关闭设置">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="reminders">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.4a2 2 0 0 1 2.4 0l.9.7a1 1 0 0 0 .8.2l1.1-.2a2 2 0 0 1 2.2 1.4l.3 1.1a1 1 0 0 0 .5.6l1 .6a2 2 0 0 1 .7 2.6l-.5 1a1 1 0 0 0 0 .8l.5 1a2 2 0 0 1-.7 2.6l-1 .6a1 1 0 0 0-.5.6l-.3 1.1a2 2 0 0 1-2.2 1.4l-1.1-.2a1 1 0 0 0-.8.2l-.9.7a2 2 0 0 1-2.4 0l-.9-.7a1 1 0 0 0-.8-.2l-1.1.2a2 2 0 0 1-2.2-1.4l-.3-1.1a1 1 0 0 0-.5-.6l-1-.6a2 2 0 0 1-.7-2.6l.5-1a1 1 0 0 0 0-.8l-.5-1a2 2 0 0 1 .7-2.6l1-.6a1 1 0 0 0 .5-.6l.3-1.1a2 2 0 0 1 2.2-1.4l1.1.2a1 1 0 0 0 .8-.2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>提醒列表</span>
+      </button>
+      <button class="nav-item" data-view="blacklist">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.5" y1="4.5" x2="19.5" y2="19.5"/></svg>
+        <span>窗口黑名单</span>
+      </button>
+      <button class="nav-item" data-view="settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>全局设置</span>
+      </button>
+    </nav>
+    <div class="sidebar-status" id="sidebar-status">
+      <div class="status-row">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">加载中...</span>
+      </div>
+      <div class="status-meta" id="status-meta"></div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="content">
+
+    <!-- Reminders List View -->
+    <section class="view active" id="view-reminders">
+      <header class="view-header">
+        <h1 class="view-title">提醒列表</h1>
+        <button class="btn btn-primary" id="btn-add-reminder">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          添加提醒
+        </button>
+      </header>
+      <div class="card-list" id="reminder-list">
+        <div class="empty-state" id="reminder-empty">
+          <p>暂无提醒。点击右上角按钮添加第一个提醒。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reminder Edit Form View -->
+    <section class="view" id="view-edit">
+      <header class="view-header">
+        <h1 class="view-title" id="edit-title">添加提醒</h1>
+        <button class="btn btn-ghost" id="btn-edit-back">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          返回
+        </button>
+      </header>
+      <form class="form" id="reminder-form" autocomplete="off">
+        <input type="hidden" id="edit-id" value="">
+
+        <div class="form-grid">
+          <div class="field field-full">
+            <label class="field-label" for="f-name">提醒名称</label>
+            <input class="input" type="text" id="f-name" placeholder="例如：喝水提醒" required>
+          </div>
+
+          <div class="field field-full">
+            <label class="field-label" for="f-message">弹幕文案</label>
+            <textarea class="input textarea" id="f-message" rows="3" placeholder="作为弹幕显示的提醒文案" required></textarea>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-interval">间隔（分钟）</label>
+            <input class="input" type="number" id="f-interval" min="1" value="60" required>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-style">弹幕样式</label>
+            <select class="input select" id="f-style">
+              <option value="scroll">滚动</option>
+              <option value="center_pop">居中</option>
+              <option value="fullscreen_attack">全屏攻击</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-repeat">重复次数（0=不重复）</label>
+            <input class="input" type="number" id="f-repeat" min="0" value="0">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="f-snooze">推迟分钟数</label>
+            <input class="input" type="number" id="f-snooze" min="0" value="5">
+          </div>
+
+          <div class="field field-full">
+            <label class="checkbox-row">
+              <input type="checkbox" id="f-sound-enabled">
+              <span class="checkbox-mark"></span>
+              <span class="checkbox-label">启用音效</span>
+            </label>
+          </div>
+
+          <div class="field field-full">
+            <label class="field-label" for="f-sound-path">音效文件路径（可选）</label>
+            <input class="input" type="text" id="f-sound-path" placeholder="C:\path\to\sound.wav">
+          </div>
+
+          <div class="field field-full">
+            <label class="checkbox-row">
+              <input type="checkbox" id="f-enabled" checked>
+              <span class="checkbox-mark"></span>
+              <span class="checkbox-label">启用</span>
+            </label>
+          </div>
+        </div>
+
+        <fieldset class="rules-section">
+          <legend class="section-legend">生效时段</legend>
+          <p class="hint">限制提醒生效的时段。留空表示"始终生效"。</p>
+          <div id="rules-container"></div>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-add-rule">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            添加时段
+          </button>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="btn-cancel">取消</button>
+          <button type="submit" class="btn btn-primary" id="btn-save">保存</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Blacklist View -->
+    <section class="view" id="view-blacklist">
+      <header class="view-header">
+        <h1 class="view-title">窗口黑名单</h1>
+      </header>
+      <p class="hint">当黑名单中的进程/窗口处于前台时，提醒将被抑制。</p>
+      <form class="form form-inline" id="blacklist-form" autocomplete="off">
+        <div class="field">
+          <label class="field-label" for="bl-process">进程名</label>
+          <input class="input" type="text" id="bl-process" placeholder="e.g. vlc.exe" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="bl-title">窗口标题（可选）</label>
+          <input class="input" type="text" id="bl-title" placeholder="部分匹配">
+        </div>
+        <button type="submit" class="btn btn-primary">添加</button>
+      </form>
+      <div class="card-list" id="blacklist-list">
+        <div class="empty-state" id="blacklist-empty">
+          <p>暂无黑名单。提醒将在所有窗口中触发。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings View -->
+    <section class="view" id="view-settings">
+      <header class="view-header">
+        <h1 class="view-title">全局设置</h1>
+      </header>
+      <div class="settings-group">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">开机自启</span>
+            <span class="setting-desc">开机时自动启动应用。</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="set-autostart">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">弹幕透明度</span>
+            <span class="setting-desc">弹幕文字的透明度。</span>
+          </div>
+          <div class="setting-control">
+            <input type="range" class="range" id="set-opacity" min="0" max="1" step="0.05" value="0.85">
+            <span class="range-value" id="set-opacity-val">0.85</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">弹幕速度（秒）</span>
+            <span class="setting-desc">滚动弹幕横穿屏幕所需的秒数。</span>
+          </div>
+          <input class="input input-sm" type="number" id="set-speed" min="1" max="60" value="8">
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">弹幕字号（像素）</span>
+            <span class="setting-desc">弹幕文字的像素字号。</span>
+          </div>
+          <input class="input input-sm" type="number" id="set-fontsize" min="12" max="120" value="36">
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">弹幕数量</span>
+            <span class="setting-desc">全屏攻击时每次触发的弹幕条数。</span>
+          </div>
+          <div class="setting-control">
+            <input type="range" class="range" id="set-count" min="10" max="300" step="10" value="100">
+            <span class="range-value" id="set-count-val">100</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">球体半径</span>
+            <span class="setting-desc">全屏攻击时球体的半径大小。</span>
+          </div>
+          <div class="setting-control">
+            <input type="range" class="range" id="set-sphere-radius" min="100" max="800" step="10" value="400">
+            <span class="range-value" id="set-sphere-radius-val">400</span>
+          </div>
+        </div>
+
+        <div class="setting-row" id="color-setting-row">
+          <div class="setting-info">
+            <span class="setting-name">字体颜色</span>
+            <span class="setting-desc">渐变色或纯色。</span>
+          </div>
+          <div class="setting-color-picker">
+            <div class="color-tabs">
+              <button class="color-tab active" data-mode="gradient">渐变</button>
+              <button class="color-tab" data-mode="solid">单色</button>
+            </div>
+            <div class="color-presets" id="color-presets"></div>
+            <div class="color-custom" id="color-custom" style="display:none">
+              <input type="color" id="set-color-custom" value="#ff0040">
+              <span class="color-hex" id="color-hex-label">#ff0040</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row setting-row-actions">
+          <div class="setting-info">
+            <span class="setting-name">暂停/恢复全部</span>
+            <span class="setting-desc">一次性暂停或恢复所有提醒。</span>
+          </div>
+          <button class="btn btn-secondary" id="btn-pause">暂停全部</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

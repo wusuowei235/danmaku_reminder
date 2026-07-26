@@ -1,0 +1,157 @@
+/* DanmakuOverlay - fully transparent, no decorations */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    overflow: hidden;
+    pointer-events: none;
+    cursor: default;
+    font-family: system-ui, 'Microsoft YaHei', sans-serif;
+}
+
+#danmaku-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Scroll danmaku: enters from right, scrolls left */
+/* Gradient and glow are applied via JS (random variation per danmaku) */
+.danmaku-scroll {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 36px;
+    font-weight: 700;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.55);
+    will-change: transform, filter;
+    /* animation applied via JS after initial position is set */
+}
+
+@keyframes danmaku-scroll-anim {
+    from { transform: translateX(var(--scroll-start)) scale(0.88); }
+    6%   { transform: translateX(calc(var(--scroll-start) * 0.92)) scale(1); }
+    to   { transform: translateX(var(--scroll-distance)) scale(1); }
+}
+
+/* Center pop danmaku: dramatic bounce-in from center, hold, fade out */
+.danmaku-center-pop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    white-space: nowrap;
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 35%, #ff8800 65%, #ffcc33 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.6);
+    will-change: transform, opacity, filter;
+    animation:
+        danmaku-center-pop-anim 4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        danmaku-center-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes danmaku-center-pop-anim {
+    0%   { transform: translate(-50%, -50%) scale(0) rotate(-6deg); opacity: 0; }
+    10%  { transform: translate(-50%, -50%) scale(1.2) rotate(3deg); opacity: var(--danmaku-opacity, 1); }
+    18%  { transform: translate(-50%, -50%) scale(0.92) rotate(-2deg); opacity: var(--danmaku-opacity, 1); }
+    26%  { transform: translate(-50%, -50%) scale(1.06) rotate(1deg); opacity: var(--danmaku-opacity, 1); }
+    34%  { transform: translate(-50%, -50%) scale(0.98) rotate(0deg); opacity: var(--danmaku-opacity, 1); }
+    40%  { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: var(--danmaku-opacity, 1); }
+    75%  { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: var(--danmaku-opacity, 1); }
+    100% { transform: translate(-50%, -50%) scale(1.35) rotate(0deg); opacity: 0; }
+}
+
+@keyframes danmaku-center-glow {
+    0%, 100% {
+        filter:
+            drop-shadow(-1px -1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(1px -1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(-1px 1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(0 0 8px rgba(255, 200, 0, 0.5))
+            drop-shadow(0 0 18px rgba(255, 170, 0, 0.3));
+    }
+    50% {
+        filter:
+            drop-shadow(-1px -1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(1px -1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(-1px 1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6))
+            drop-shadow(0 0 16px rgba(255, 200, 0, 0.85))
+            drop-shadow(0 0 32px rgba(255, 170, 0, 0.5));
+    }
+}
+
+/* ── Full-screen attack: programmatic Web Animations API (CSS only for base style) ── */
+.danmaku-attack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    font-weight: 700;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    will-change: transform;
+}
+
+/* ── Snooze bar ── */
+#snooze-bar {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: rgba(15, 20, 30, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    pointer-events: auto;
+    user-select: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+#snooze-text {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+    font-weight: 500;
+}
+#snooze-btn {
+    padding: 5px 16px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #e94560, #ff6b6b);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+#snooze-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 10px rgba(233, 69, 96, 0.5);
+}
+#snooze-btn:active {
+    transform: scale(0.95);
+}

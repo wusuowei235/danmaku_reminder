@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.exe
+*.spec
+build/
+dist/
+bak/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
