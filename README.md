@@ -4,8 +4,8 @@
 
 一个 Windows 桌面工具，到时间在全屏铺满弹幕提醒你。支持 3D 球体旋转爆炸特效、鼠标穿透、常驻系统托盘，让你**绝对不可能忽略**任何提醒。
 
-![[Pasted image 20260726222826.png]]
-![[Pasted image 20260726223531.png]]
+![fullscreen_attack](screenshots/screenshot_attack.png)
+![settings](screenshots/screenshot_settings.png)
 ## ✨ 功能
 
 ### 三种弹幕模式
